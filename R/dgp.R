@@ -1,6 +1,6 @@
 
-require(metRology)
-require(Matrix)
+#require(metRology)
+#require(Matrix)
 
 dgp=function(N,p,T,rho=0.5,betas=rep(1,p-1),innovations="garch",dfg=5,g.par=c(5e-4,0.9,0.05),
              var.error="student.t",dfv=5,size.a.blk=5,a1.par=0.15,a4.par=-0.1){

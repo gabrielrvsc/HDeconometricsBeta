@@ -1,4 +1,4 @@
-require(glmnet)
+#require(glmnet)
 
 biclasso=function(x,y,alpha=1,display=FALSE,penalty.factor=rep(1,ncol(x))){
   
