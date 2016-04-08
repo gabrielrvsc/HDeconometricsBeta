@@ -1,34 +1,30 @@
 \name{baggit}
 \alias{baggit}
-\title{Fits LASSO, Ridge and Elastic-net using glmnet and selectes the best model using the BIC.}
+\title{A pre-defined function to use as the pre-testing for the bagging proceedure on method 2.}
 \usage{
-biclasso(x,y,alpha=1,display=FALSE,penalty.factor=rep(1,ncol(x)))
+baggit(mat, pre.testing=c("joint","individual"), fixed.controls=NULL, t.stat=1.96)
 }
 \description{
-The glmnet function estimates the desired model for several values of the regularization parameter lambda. This function uses the results from the glmnet to select the best version of the desired model using the BIC to decide. The glmet is programmed to cover the entire relevant space of lambda, which starts (for LASSO and Elastic-net) at the smaller lambda that excludes all variables and stops when all variables are included or, in case N>>T, it stops when the number of selected variable, p=T.
+This function calculates the pre-testing of the bagging proceedure in two different ways.
+
+  1- Fits a regression with all variable and select those which are significant. Then fits an other regression only with the selected variable and saves the coefficients.
+  
+  2- Fits one individual regression for each candidate variable and select those which are individually significant to use on the second regression.
+
 }
 
 \arguments{
-  \item{x}{T x N matrix with all candidate variables.}
+  \item{mat}{T x N+1 where the first column is the dependent variable and the other columns are for the independent variables.}
 
-  \item{y}{T-dimensional vector with the dependent variable.}
+  \item{pre.testing}{If "joint", the all variables are tested in one single model before going to the final model. Note that this option is only feasible for T>N. If "Individual" then each variable is tested individualy before going to the final model. This method is feasible even when N>T if the procedure does not end with more variables than observation after the pre-testing.}
   
-  \item{alpha}{1 for LASSO, 0 for Ridge and for any number between 0 and 1 for Elastic-net. See the glmnet documentation for more information.}
-  \item{display}{If TRUE the function returns some plots regarding model adjustment.}
-  \item{penalty.factor}{A N-dimensional vector used in cases when it is desired to give different weights for each variable. For example, in the adaptive LASSO these weights are calculated from some first step model.}
+  \item{fixed.controls}{only for pre.testing="individual". A vector indexing variables that must be used as common controls in the individual pre-testing and also in the final model.}
+  \item{t.stat}{Value of the t-statistic to define which variables remain after the pre-testing.}
  
 }
 
 \value{
-This function returns a list with several items. 
-
-  \item{coef}{Coefficients of the best model selected using the BIC.}
-  \item{lambda}{Best regularization parameter.}
-  \item{bic}{Best model BIC.}
-  \item{nvar}{Number of selected variables}
-  \item{r2}{R-squared of the best model.}
-  \item{adjr2}{Adjusted R-squared of the best model.}
-  \item{glmnet-model}{Object with the entire output of the glmnet.}
+This function returns a vector with the estimated coefficients. The excluded variables are zero. 
 
 }
 
@@ -39,20 +35,13 @@ Nothin to add.
 }
 
 
-\references{
-Friedman, Jerome, Trevor Hastie, and Robert Tibshirani. "glmnet: Lasso and elastic-net regularized generalized linear models. R package version 1.9–5." (2013).
-
-
-}
 
 \examples{
-# LASSO exaple
-# 300 variable, 10 relevant, 100 observations
-set.seed(123456)
-
-N=300
+## Generates data
+set.seed(12345)
+N=20
 p=10
-T=101 #one more because of the autorregressive
+T=101 
 betas=runif(p-1,-1,1)
 
 data=dgp(N=N,p=p,T=T,betas=betas)
@@ -62,20 +51,10 @@ X=data$X
 X=cbind(embed(y,2)[,-1],X[-1,])
 y=y[-1]
 
-lasso=biclasso(X,y,display=TRUE)
-
-lasso$nvar #more variables than the true model
-
-# adaptiveLASSO with tau=1
-tau=1
-weight=(abs(lasso$coef[-1])+1/sqrt(T-1))^(-tau)
-
-adalasso=biclasso(X,y,display = TRUE,penalty.factor = weight)
-
-# Results closer to the real model
-adalasso$nvar
-adalasso$coef[2:(p+1)]
-betas
+# All variables together
+test1=baggit(cbind(y,X),pre.testing="joint")
+# Individual tests
+test2=baggit(cbind(y,X),pre.testing="individual",fixed.controls = 1)
 
 }
 

@@ -1,5 +1,5 @@
 
-baggit=function(mat,pre.testing="joint",fixed.controls=NULL){
+baggit=function(mat,pre.testing="joint",fixed.controls=NULL,t.stat=1.96){
   
   y=mat[,1]
   X=mat[,-1]
@@ -12,7 +12,7 @@ baggit=function(mat,pre.testing="joint",fixed.controls=NULL){
     
     m1=lm(y~X)
     t1=summary(m1)$coefficients[-1,3]
-    s1=which(abs(t1)>1.95)
+    s1=which(abs(t1)>t.stat)
     if(length(s1)==0){
       stop("Error: The pre-testing excluded all variables","/n")
     }
@@ -39,7 +39,7 @@ baggit=function(mat,pre.testing="joint",fixed.controls=NULL){
       store.t[i]=t1
     }
     
-    s1=which(abs(store.t)>1.96)
+    s1=which(abs(store.t)>t.stat)
     
     
   }

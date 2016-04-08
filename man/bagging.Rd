@@ -1,34 +1,44 @@
 \name{bagging}
 \alias{bagging}
-\title{Fits LASSO, Ridge and Elastic-net using glmnet and selectes the best model using the BIC.}
+\title{Estimates bagging coefficients for a given pre-testing procedure.}
 \usage{
-biclasso(x,y,alpha=1,display=FALSE,penalty.factor=rep(1,ncol(x)))
+# Method 1:
+bagging(y,X,R=100,l=5,sim="fixed",pre.testing=c("joint","individual"),fixed.controls=NULL,...)
+
+# Method 2:
+bagging(y,X,fn,R=100,l=5,sim="fixed",pre.testing="personal",...)
+
 }
 \description{
-The glmnet function estimates the desired model for several values of the regularization parameter lambda. This function uses the results from the glmnet to select the best version of the desired model using the BIC to decide. The glmet is programmed to cover the entire relevant space of lambda, which starts (for LASSO and Elastic-net) at the smaller lambda that excludes all variables and stops when all variables are included or, in case N>>T, it stops when the number of selected variable, p=T.
+This function returns the pre-testing coefficients for all bootstrap samples. This coefficients may then be used to calculate forecasts. 
 }
 
 \arguments{
-  \item{x}{T x N matrix with all candidate variables.}
-
   \item{y}{T-dimensional vector with the dependent variable.}
+
+  \item{x}{T x N matrix with all candidate variables.}
   
-  \item{alpha}{1 for LASSO, 0 for Ridge and for any number between 0 and 1 for Elastic-net. See the glmnet documentation for more information.}
-  \item{display}{If TRUE the function returns some plots regarding model adjustment.}
-  \item{penalty.factor}{A N-dimensional vector used in cases when it is desired to give different weights for each variable. For example, in the adaptive LASSO these weights are calculated from some first step model.}
+  \item{R}{Number of bootstrap samples to be used.}
+  
+  \item{l}{length of the blocks for blockbootstrap.}
  
+  \item{sim}{How the blockboostrap is computed. See ?tsboot for details.}
+  
+  \item{pre.testing}{For method 1 this argument defines which pre-testing of the function baggit to be used. For method 2 this argument must be set to "personal", indicating that some other user defined pre-testing is to be used. }
+  
+  \item{fixed.controls}{Only for method 1. Vector of indexes to determine which variables are fixed if pre.testing="individual". See ?baggit for details.}
+  
+  \item{fn}{User define pre-testing for method 2.}
+  
+  \item{...}{Aditional arguments for the tsboot function and the user defined pre-testing in method 2.}
 }
 
 \value{
 This function returns a list with several items. 
 
-  \item{coef}{Coefficients of the best model selected using the BIC.}
-  \item{lambda}{Best regularization parameter.}
-  \item{bic}{Best model BIC.}
-  \item{nvar}{Number of selected variables}
-  \item{r2}{R-squared of the best model.}
-  \item{adjr2}{Adjusted R-squared of the best model.}
-  \item{glmnet-model}{Object with the entire output of the glmnet.}
+  \item{boot.coef}{R x N matrix. Each line has the coefficients for one bootstrap sample.}
+  \item{orig.coef}{Coefficients for the pre-testing applied on the original sample. }
+  \item{fitted.values}{In-sample fitted values.}
 
 }
 
@@ -39,20 +49,13 @@ Nothin to add.
 }
 
 
-\references{
-Friedman, Jerome, Trevor Hastie, and Robert Tibshirani. "glmnet: Lasso and elastic-net regularized generalized linear models. R package version 1.9–5." (2013).
-
-
-}
 
 \examples{
-# LASSO exaple
-# 300 variable, 10 relevant, 100 observations
-set.seed(123456)
-
-N=300
-p=10
-T=101 #one more because of the autorregressive
+## Generates data
+set.seed(12345)
+N=50
+p=20
+T=101 
 betas=runif(p-1,-1,1)
 
 data=dgp(N=N,p=p,T=T,betas=betas)
@@ -62,20 +65,13 @@ X=data$X
 X=cbind(embed(y,2)[,-1],X[-1,])
 y=y[-1]
 
-lasso=biclasso(X,y,display=TRUE)
 
-lasso$nvar #more variables than the true model
+set.seed(123)
+#Method 1
+test1=bagging(y,X,R=50,l=5,pre.testing = "individual")
 
-# adaptiveLASSO with tau=1
-tau=1
-weight=(abs(lasso$coef[-1])+1/sqrt(T-1))^(-tau)
-
-adalasso=biclasso(X,y,display = TRUE,penalty.factor = weight)
-
-# Results closer to the real model
-adalasso$nvar
-adalasso$coef[2:(p+1)]
-betas
+Method 2
+test2=bagging(y,X,fn=baggit,R=50,l=5,pre.testing = "personal")
 
 }
 
