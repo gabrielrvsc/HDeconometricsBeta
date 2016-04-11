@@ -1,81 +1,78 @@
-\name{biclasso}
-\alias{biclasso}
-\title{Fits LASSO, Ridge and Elastic-net using glmnet and selectes the best model using the BIC.}
+\name{csr}
+\alias{csr}
+\title{Estimates the Complete Subset Regressions of Elliott et. al (2013)}
 \usage{
-biclasso(x,y,alpha=1,display=FALSE,penalty.factor=rep(1,ncol(x)))
+csr(y,X,K=20,k=4,fixed.controls=NULL)
 }
+
 \description{
-The glmnet function estimates the desired model for several values of the regularization parameter lambda. This function uses the results from the glmnet to select the best version of the desired model using the BIC to decide. The glmet is programmed to cover the entire relevant space of lambda, which starts (for LASSO and Elastic-net) at the smaller lambda that excludes all variables and stops when all variables are included or, in case N>>T, it stops when the number of selected variable, p=T.
+This function allows the user to pre-test which variables are to be used in the CSR. The CSR tends to be computationaly slow when the total number of variables or the number of variables in each subset grow very big. 
+
+The pre-testing is activated automatically in the total number of variables is bigger than K. If the user chooses K=number of variables then the procedure is exactly the one presented in Elliott et. al (2013). 
+
+Additionaly, fixed controls are allowed. If the user choosed to have fixed controls in the model, the procedure is almost the same. However, the variables selected to be fixed will be used as controls in the pre-testing and in the subset of regressions. In this case, the K in the pre-testing becomes the number of variables to be selected ignoring those which are fixed controls. 
+
 }
+
 
 \arguments{
-  \item{x}{T x N matrix with all candidate variables.}
 
   \item{y}{T-dimensional vector with the dependent variable.}
+
+  \item{x}{T x N matrix with all candidate variables.}
   
-  \item{alpha}{1 for LASSO, 0 for Ridge and for any number between 0 and 1 for Elastic-net. See the glmnet documentation for more information.}
-  \item{display}{If TRUE the function returns some plots regarding model adjustment.}
-  \item{penalty.factor}{A N-dimensional vector used in cases when it is desired to give different weights for each variable. For example, in the adaptive LASSO these weights are calculated from some first step model.}
- 
+  \item{K}{Number of variables to be selected after the pre-testing. Make "K=total number of variables" if you wish to skip the pre-testing and use all variables in the CSR.}
+  
+  \item{k}{Number of variables in each subset.}
+  
+  \item{fixed.controls}{A vector indexing variables that must be used as common controls in the individual pre-testing and also in the regressions in the subset.}
+  
+  
 }
 
 \value{
 This function returns a list with several items. 
 
-  \item{coef}{Coefficients of the best model selected using the BIC.}
-  \item{lambda}{Best regularization parameter.}
-  \item{bic}{Best model BIC.}
-  \item{nvar}{Number of selected variables}
-  \item{r2}{R-squared of the best model.}
-  \item{adjr2}{Adjusted R-squared of the best model.}
-  \item{glmnet-model}{Object with the entire output of the glmnet.}
+  \item{coefficients}{A matrix with the coefficients estimated in each regression of the subset. The number of rows if the coeficcients matrix is combn(K,k) and the number of columns is nvar+1. The first column is for the constant.}
+  \item{type}{Object determining the type of model to be used in other functions.}
 
 }
 
 \details{
-Nothin to add.
 
+The pre-testing procedure is just to fit individual regressions for each variables and select the K variables with bigger t-statistics. 
+
+Fitted values are not calculated to save computer time. If you wish to see the fitted values use the function predict.HDeconometrics with the in-sample observations.
 
 }
 
 
 \references{
-Friedman, Jerome, Trevor Hastie, and Robert Tibshirani. "glmnet: Lasso and elastic-net regularized generalized linear models. R package version 1.9–5." (2013).
-
-
+Elliott, Graham, Antonio Gargano, and Allan Timmermann. "Complete subset regressions." Journal of Econometrics 177.2 (2013): 357-373.
 }
 
 \examples{
-# LASSO exaple
-# 300 variable, 10 relevant, 100 observations
-set.seed(123456)
+##########complete subset regression
+data(brinf)
+K=25
+k=4
+y=brinf[,1]
+X=brinf[,-1]
 
-N=300
-p=10
-T=101 #one more because of the autorregressive
-betas=runif(p-1,-1,1)
+##- csr - no fixed controls
+csr.test=csr(y,X)
 
-data=dgp(N=N,p=p,T=T,betas=betas)
-y=data$y
-X=data$X
+##- csr - first four variables as fixed controls
+csr1.test=csr(y,X,k=4,K=20,fixed.controls=c(1:4))
 
-X=cbind(embed(y,2)[,-1],X[-1,])
-y=y[-1]
+## Compare fitted values with a plot
+plot(y,type="l")
 
-lasso=biclasso(X,y,display=TRUE)
+fitted=predict.HDeconometrics(csr.test,X)
+fitted1=predict.HDeconometrics(csr1.test,X)
 
-lasso$nvar #more variables than the true model
-
-# adaptiveLASSO with tau=1
-tau=1
-weight=(abs(lasso$coef[-1])+1/sqrt(T-1))^(-tau)
-
-adalasso=biclasso(X,y,display = TRUE,penalty.factor = weight)
-
-# Results closer to the real model
-adalasso$nvar
-adalasso$coef[2:(p+1)]
-betas
+lines(fitted,col="red")
+lines(fitted1,col="blue")
 
 }
 

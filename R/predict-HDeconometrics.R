@@ -11,7 +11,5 @@ predict.HDeconometrics=function(model,newdata){
     }
   }  
   
-  
-  
   return(final.prediction)
 }
