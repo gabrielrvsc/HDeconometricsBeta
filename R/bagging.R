@@ -17,5 +17,5 @@ bagging=function(y,X,fn=NULL,R=100,l=5,sim="fixed",pre.testing="joint",fixed.con
   yhat=rowMeans(cbind(1,X)%*%t(bootres),na.rm=TRUE)
   
   
-  return(list("boot.coef"=bootres,"orig.coef"=original,"fitted.values"=yhat))
+  return(list("boot.coef"=bootres,"orig.coef"=original,"fitted.values"=yhat,"type"="bagging"))
 }

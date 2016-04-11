@@ -38,6 +38,7 @@ biclasso=function(x,y,alpha=1,display=FALSE,penalty.factor=rep(1,ncol(x))){
   }
   
   return(list("coef"=coef[,best.model],"lambda"=lambda[best.model],"bic"=bic[best.model],
-              "nvar"=nvar[best.model],"r2"=r2[best.model],"adjr2"=adjr2[best.model],"glmnet-model"=inf.lasso))
+              "nvar"=nvar[best.model],"r2"=r2[best.model],"adjr2"=adjr2[best.model],"glmnet-model"=inf.lasso,
+              "type"="LASSO"))
   
 }

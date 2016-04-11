@@ -54,7 +54,8 @@ boosting=function(y,X,v=0.2,minIt=ncol(X)/2,maxIt=10*ncol(X),display=TRUE,crit.b
   }
   
   coef.final=save.B[,which(save.crit==min(save.crit,na.rm=TRUE))] 
+  names(coef.final)=colnames(X)
   fitted=mean(y)+X%*%coef.final
   save.crit=save.crit[1:m]
-  return(list("coef"=coef.final,"fitted.values"=fitted,"best.crit"=min(save.crit,na.rm=TRUE),"all.crit"=save.crit,"df"=df.final))
+  return(list("coef"=coef.final,"fitted.values"=fitted,"best.crit"=min(save.crit,na.rm=TRUE),"all.crit"=save.crit,"df"=df.final,"type"="boosting","y"=y))
 }
