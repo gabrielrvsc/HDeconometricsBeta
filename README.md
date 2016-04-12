@@ -12,3 +12,7 @@ List of functions
 - predict.HDeconometrics
 
 Use ?function in R to view documentation and manual.
+
+
+Auxiliary functions:
+- aggregate.ts.matrix
