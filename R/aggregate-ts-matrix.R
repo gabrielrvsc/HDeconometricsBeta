@@ -4,7 +4,7 @@ aggregate.ts.matrix=function (matrix, aggregation = c("month", "week"), FUN = su
 {
   
   
-  last=function(x,na.rm=TRUE){
+  ultimo=function(x,na.rm=TRUE){
     if(all(is.na(x))){
       return(NA)
     }else{
