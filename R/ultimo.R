@@ -6,3 +6,4 @@ ultimo = function(x, na.rm = TRUE) {
             aux = which(is.na(x) == FALSE)
             return(x[aux[length(aux)]])
         }
+        }
