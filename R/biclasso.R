@@ -2,6 +2,10 @@
 
 biclasso=function(x,y,alpha=1,display=FALSE,penalty.factor=rep(1,ncol(x))){
   
+  if(is.matrix(x)==FALSE){
+    x=as.matrix(x)
+  }
+  
   if(is.vector(y)==FALSE){
     y=as.vector(y)
   }
