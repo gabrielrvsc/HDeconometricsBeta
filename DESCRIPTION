@@ -1,11 +1,11 @@
 Package: HDeconometrics
 Type: Package
-Title: What the Package Does (Title Case)
+Title: Functions fo High-Dimensional econometrics
 Version: 0.1
 Date: 2016-04-06
 Author: Gabriel Vasconcelos
-Maintainer: Who to complain to <yourfault@somewhere.net>
-Description: More about what it does (maybe more than one line)
-License: What license is it under?
+Maintainer: Gabriel Vasconcelos <gabrielrvsc@yahoo.com.br>
+Description: -----
+License: -----
 LazyData: TRUE
 Depends: Matrix, glmnet, metRology, boot, zoo
