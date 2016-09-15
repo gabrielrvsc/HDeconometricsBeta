@@ -1,7 +1,7 @@
 # HDeconometrics
 R package for high dimensional econometrics
 
-List of functions
+List of functions:
 
 - bagging
 - baggit
@@ -11,8 +11,12 @@ List of functions
 - dgp
 - predict.HDeconometrics
 
+VAR functions
+
+- fitvar
+- identification
+- irf
+- boot.irf
+- plot.irf
+
 Use ?function in R to view documentation and manual.
-
-
-Auxiliary functions:
-- aggregate.ts.matrix
