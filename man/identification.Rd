@@ -1,5 +1,5 @@
 \name{identification}
-\alias{identificatiob}
+\alias{identification}
 \title{Recursive VAR identification using Cholesky decomposition.}
 \usage{
 identification(model){
