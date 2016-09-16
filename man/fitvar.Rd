@@ -2,7 +2,7 @@
 \alias{fitvar}
 \title{Fit Vector Autorregressive models by OLS and regularization including LASSO and adaLASSO.}
 \usage{
-fitvar(Y,p,type=c("ols","lasso"),penalty.factor=matrix(1,ncol(Y),ncol(Y)*p)){
+fitvar(Y,p,type=c("ols","lasso"),penalty.factor=matrix(1,ncol(Y),ncol(Y)*p))
 }
 
 \description{
