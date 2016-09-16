@@ -1,46 +1,37 @@
 \name{irf}
 \alias{irf}
-\title{Fit Vector Autorregressive models by OLS and regularization including LASSO and adaLASSO.}
+\title{Calculates Impulse Response coefficents for an identified VAR.}
 \usage{
 irf(model,ident,h,unity.shock=TRUE)
 }
 
 \description{
 
-This function fits VAR models using OLS and shrinkage such as LASSO and adaLASSO. 
+This function calculates impulse response functions for an identified VAR fitted using the function fitvar and identified using the function indentification.
 
 }
 
 
 \arguments{
 
-  \item{Y}{T x k matrix with the endogenous variables in the VAR}
+  \item{model}{VAR model estimated using the function fitvar.}
 
-  \item{p}{Order of the VAR. Recall that for OLS estimation T-p must be bigger than k*p}
+  \item{ident}{Object created by the function identification.}
   
-  \item{type}{"ols" and "LASSO" implemented so far. LASSO stands for the l1 penalty and it allows weights unsing the argument penalty.factor}
+  \item{h}{Horizon for the impulse response.}
   
-  \item{penalty.factor}{k X k*p Matrix  where each line contains the weights for the coefficients of one equation of the VAR}
+  \item{unity.shock}{If TRUE, the irf is calculated for unity variation on structural shocks. If FALSE the irf is calculated for one standar deviation variation on the structural shocks.  }
   
 }
 
 \value{
-This function returns a list with several items. 
-
-  \item{coef.by.equation}{k X k*p +1 matrix where the first columns is the intersect and the other columns are the coefficients. Each line is an equation and the coefficients are ordered by the lag and the column order of Y.}
-  \item{coef.by.block}{A list where the first element is a vector with the intersect of each equation and the other elements are the VAR coefficient matrix for each lag.}
-  \item{fitted}{VAR fitted values.}
-  \item{residuals}{VAR residuals.}
-  \item{N}{Number of variables in each VAR equation.}
-  \item{p}{VAR order.}
-  \item{covmat}{residuals covariance matrix.}
-  \item{Y}{Supplied Y matrix.}
-  \item{type}{Supplied type.}
+This function returns a list where each element represents one variable of the VAR. Each element contains the irf results 
+for an impulse on the variable tha names the object in the list. Inside each object is an h+1 x k matrix where each column is the response of each VAR variable and each row is one horizon.
 }
 
 \details{
 
-See ?identificatio ?irf and ?boot.irf for other VAR functions.
+See ?fitvar ?identification and ?boot.irf for other VAR functions.
 
 }
 
@@ -51,5 +42,12 @@ See ?identificatio ?irf and ?boot.irf for other VAR functions.
 dados=dgp(100,20,200)
 Y=dados$X[,1:4]
 p=3 # var order
+
+# estimation and identification #
 model=fitvar(Y,p,type="ols")
+ident=identification(model)
+
+h=48
+ir=irf(model,ident,h,unity.shock = TRUE)
+plot.irf(ir,1,2)
 }
