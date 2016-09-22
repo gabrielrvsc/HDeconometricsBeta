@@ -25,3 +25,6 @@ Dataset Brazilian Real-time Inflation
 - rtinf.rda
 
 Use ?function in R to view documentation and manual.
+
+
+* Documentation is still a draft.
