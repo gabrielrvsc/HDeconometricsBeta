@@ -1,21 +1,25 @@
 predict.HDeconometrics=function (model, newdata=NULL, h=1) 
 {
-  if (model$type == "lbvar"){
-    p=model$p
-    b=model$betas
-    aux=embed(model$Y,p)
-    aux=aux[nrow(aux),]
+  if (model$type == "lbvar") {
+    p = model$p
+    b = model$betas
+    aux = embed(model$Y, p)
+    aux = aux[nrow(aux), ]
+    N = ncol(model$Y)
+    prev.store = matrix(NA, h, N)
+    exog=length(model$xreg)
     
-    N=ncol(model$Y)
-    
-    prev.store=matrix(NA,h,N)
-    for(i in 1:h){
-      prev=c(1,aux)%*%b
-      prev.store[i,]=prev
-      aux=c(prev,head(aux,length(aux)-N))
+    for (i in 1:h) {
+      if(exog>0){
+        prev = c(1, aux,newdata[i,]) %*% b
+      }else{
+        prev = c(1, aux) %*% b
+      }
+      prev.store[i, ] = prev
+      aux = c(prev, head(aux, length(aux) - N))
     }
-    final.prediction=prev.store
-    colnames(final.prediction)=colnames(model$Y)
+    final.prediction = prev.store
+    colnames(final.prediction) = colnames(model$Y)
   }
   
   
