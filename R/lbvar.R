@@ -1,16 +1,14 @@
 
 lbvar=function (Y, p = 1, delta = 0, lambda = 0.05, xreg = NULL) 
 {
-  if(!is.matrix(Y)){
-    Y=as.matrix(Y)
+  if (!is.matrix(Y)) {
+    Y = as.matrix(Y)
   }
-  
-  if(length(xreg)!=0){
-    if(!is.matrix(xreg)){
-      xreg=as.matrix(xreg)
+  if (length(xreg) != 0) {
+    if (!is.matrix(xreg)) {
+      xreg = as.matrix(xreg)
     }
   }
-  
   aux = embed(Y, p + 1)
   N = ncol(Y)
   Yreg = aux[, 1:N]
@@ -40,21 +38,20 @@ lbvar=function (Y, p = 1, delta = 0, lambda = 0.05, xreg = NULL)
   fitted = cbind(1, Xreg) %*% betas
   sigmae = (1/nrow(Ystar)) * t(Ystar - cbind(Xstar) %*% betas) %*% 
     (Ystar - cbind(Xstar) %*% betas)
-  
-  coef.by.equation=t(betas)
+  coef.by.equation = t(betas)
   coef.by.block = list(intersect = coef.by.equation[, 1])
   coef.by.equation = coef.by.equation[, -1]
   for (i in 1:p) {
-    coef.by.block[[i + 1]] = coef.by.equation[, (ncol(Y) * i - ncol(Y) + 
-                                            1):(ncol(Y) * i)]
+    coef.by.block[[i + 1]] = coef.by.equation[, (ncol(Y) * 
+                                                   i - ncol(Y) + 1):(ncol(Y) * i)]
   }
-  if(length(xreg)!=0){
-    aux=ncol(coef.by.equation)
-    coef.by.block[[length(coef.by.block)+1]]=coef.by.equation[,(aux-ncol(xreg)+1):aux]
+  if (length(xreg) != 0) {
+    aux = ncol(coef.by.equation)
+    coef.by.block[[length(coef.by.block) + 1]] = coef.by.equation[, 
+                                                                  (aux - ncol(xreg) + 1):aux]
   }
-  
-  
-  return(list(coef.by.equation = coef.by.equation,coef.by.block=coef.by.block, fitted = fitted, Y = Y, p = p, 
-              covmat = sigmae, type = "lbvar", xreg = xreg))
+  return(list(coef.by.equation = coef.by.equation, coef.by.block = coef.by.block, 
+              fitted = fitted, Y = Y, p = p, covmat = sigmae, type = "lbvar", 
+              xreg = xreg,Ts=c("T"=nrow(xreg),"Td"=nrow(Xd),Tstar=nrow(Xstar))))
 }
 
