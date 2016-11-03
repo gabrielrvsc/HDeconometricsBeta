@@ -1,6 +1,6 @@
 predict.HDeconometrics=function (model, newdata=NULL, h=1) 
 {
- if (model$type == "lbvar") {
+ if (model$type == "var") {
     
     if(is.vector(newdata)){
       newdata=matrix(newdata,nrow=1)
