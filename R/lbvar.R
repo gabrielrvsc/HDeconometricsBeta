@@ -51,7 +51,7 @@ lbvar=function (Y, p = 1, delta = 0, lambda = 0.05, xreg = NULL)
                                                                   (aux - ncol(xreg) + 1):aux]
   }
   return(list(coef.by.equation = coef.by.equation, coef.by.block = coef.by.block, 
-              fitted = fitted, Y = Y, p = p, covmat = sigmae, type = "lbvar", 
+              fitted = fitted, Y = Y, p = p, covmat = sigmae, type = "var", 
               xreg = xreg,Ts=c("T"=nrow(Xreg),"Td"=nrow(Xd),Tstar=nrow(Xstar))))
 }
 
