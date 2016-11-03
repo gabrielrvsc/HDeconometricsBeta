@@ -7,7 +7,7 @@ predict.HDeconometrics=function (model, newdata=NULL, h=1)
     }
     
     p = model$p
-    b = model$betas
+    b = t(model$coef.by.equation)
     aux = embed(model$Y, p)
     aux = aux[nrow(aux), ]
     N = ncol(model$Y)
