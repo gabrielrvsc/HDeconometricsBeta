@@ -1,5 +1,5 @@
 
-fitvar=function(Y,p,type="ols",penalty.factor=matrix(1,ncol(Y),ncol(Y)*p)){
+fitvar=function(Y,p,m.type="ols",penalty.factor=matrix(1,ncol(Y),ncol(Y)*p)){
   
   if(length(colnames(Y))<ncol(Y)){
     aux=seq(1:ncol(Y))
@@ -12,7 +12,7 @@ fitvar=function(Y,p,type="ols",penalty.factor=matrix(1,ncol(Y),ncol(Y)*p)){
   
   save.coef=matrix(NA,ncol(Y),ncol(Y)*p+1)
   
-  if(type=="ols"){
+  if(m.type=="ols"){
     for(i in 1:ncol(Y)){
       
       ols=lm(Y1[,i]~Y1[,-c(1:ncol(Y))])
@@ -20,7 +20,7 @@ fitvar=function(Y,p,type="ols",penalty.factor=matrix(1,ncol(Y),ncol(Y)*p)){
       
     }
   }
-  if(type=="lasso"){
+  if(m.type=="lasso"){
     for(i in 1:ncol(Y)){
       
       lasso=biclasso(y=Y1[,i], x=Y1[,-c(1:ncol(Y))], display=FALSE,penalty.factor = penalty.factor[i,])
@@ -44,5 +44,5 @@ fitvar=function(Y,p,type="ols",penalty.factor=matrix(1,ncol(Y),ncol(Y)*p)){
   covmatrix=(t(residuals)%*%residuals)/(nrow(Y1)-ncol(Y1))
   
   return(list("coef.by.equation"=coef.by.equation,"coef.by.block"=coef.by.block,"fitted"=fitted,
-              "residuals"=residuals,"N"=nrow(Y1),"p"=p,"covmat"=covmatrix,"Y"=Y,"type"=type))
+              "residuals"=residuals,"N"=nrow(Y1),"p"=p,"covmat"=covmatrix,"Y"=Y,"m.type"=m.type,type="var"))
 }
