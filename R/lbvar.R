@@ -1,4 +1,3 @@
-
 lbvar=function (Y, p = 1, delta = 0, lambda = 0.05, xreg = NULL) 
 {
   if (!is.matrix(Y)) {
@@ -34,7 +33,8 @@ lbvar=function (Y, p = 1, delta = 0, lambda = 0.05, xreg = NULL)
   Xd = cbind(c(rep(0, nrow(aux6) - 1), 0.1), aux6)
   Ystar = rbind(Yd, Yreg)
   Xstar = rbind(Xd, cbind(1, Xreg))
-  betas = solve(t(Xstar) %*% Xstar) %*% t(Xstar) %*% Ystar
+  #betas = solve(t(Xstar) %*% Xstar) %*% t(Xstar) %*% Ystar
+  betas=coef(lm(Ystar~-1+Xstar))
   fitted = cbind(1, Xreg) %*% betas
   sigmae = (1/nrow(Ystar)) * t(Ystar - cbind(Xstar) %*% betas) %*% 
     (Ystar - cbind(Xstar) %*% betas)
@@ -52,6 +52,5 @@ lbvar=function (Y, p = 1, delta = 0, lambda = 0.05, xreg = NULL)
   }
   return(list(coef.by.equation = t(betas), coef.by.block = coef.by.block, 
               fitted = fitted, Y = Y, p = p, covmat = sigmae, type = "var", 
-              xreg = xreg,Ts=c("T"=nrow(Xreg),"Td"=nrow(Xd),Tstar=nrow(Xstar))))
+              xreg = xreg, Ts = c(T = nrow(Xreg), Td = nrow(Xd), Tstar = nrow(Xstar))))
 }
-
