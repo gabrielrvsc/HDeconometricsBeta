@@ -1,5 +1,5 @@
 
-csr==function (y, X, K = 20, k = 4, fixed.controls = NULL) 
+csr=function (y, X, K = 20, k = 4, fixed.controls = NULL) 
 {
   if (length(fixed.controls) > 0) {
     w = X[, fixed.controls]
