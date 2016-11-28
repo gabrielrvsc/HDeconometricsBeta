@@ -50,6 +50,7 @@ predict.HDeconometrics=function (model, newdata=NULL, h=1)
   }
   if (model$type == "bagging") {
     parameters = model$boot.coef
+    parameters[is.na(parameters)]=0
     if (is.vector(newdata)) {
       individual.prediction = c(1, newdata) %*% t(parameters)
       final.prediction = mean(individual.prediction)
