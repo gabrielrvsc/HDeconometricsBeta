@@ -29,7 +29,7 @@ baggit=function (mat, pre.testing = "joint", fixed.controls = NULL,
       m1=lm(y~X0)
       
       t0=rep(0,length(selected))
-      aux=which(is.na(coef(m1)))
+      aux=which(is.na(coef(m1)[-1]))
       t = summary(m1)$coefficients[-1, 3]
       if(length(aux)==0){
         t0=t
