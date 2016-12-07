@@ -14,7 +14,9 @@ jackknife=function(X,y,lag=4,fixed.controls=NULL){
   aux=matrix(NA,lag,N)
   Xaux=lapply(X,function(x)rbind(aux,x,aux))
   yaux=c(rep(NA,lag),y,rep(NA,lag))
-  fixed.aux=rbind(matrix(NA,lag,ncol(fixed)),fixed,matrix(NA,lag,ncol(fixed)))
+  if(length(fixed.controls)!=0){
+    fixed.aux=rbind(matrix(NA,lag,ncol(fixed)),fixed,matrix(NA,lag,ncol(fixed)))
+  }  
   for(j in 1:T){
     
     X1=lapply(Xaux,function(x)x[-c(j:(j+2*lag)),]); X2=lapply(Xaux,function(x)x[j+lag,])
