@@ -70,5 +70,41 @@ predict.HDeconometrics=function (model, newdata=NULL, h=1)
       final.prediction = ybar + newdata %*% parameters
     }
   }
+ 
+ if(model$type=="jackknife"){
+  
+  if(is.matrix(newdata[[1]])==FALSE){
+    newdata=lapply(newdata,function(x)matrix(x,nrow=1))
+  }
+  
+  w=model$weights; coef=model$coef; fixed.controls=model$fixed.controls
+  lag=model$lag; N=model$N
+  pred=matrix(NA,nrow(newdata[[1]]),N)
+  if(length(fixed.controls)==0){
+    
+    for(i in 1:N){
+      aux=Reduce("cbind",lapply(newdata,function(x)x[,i]))
+      pred[,i]=(cbind(1,aux)%*%coef[i,])*w[i]
+    }
+  }else{
+
+    fixed=Reduce("cbind",lapply(newdata,function(x)x[,fixed.controls]))
+    fixed=as.matrix(fixed)
+    newdata=lapply(newdata,function(x)x[,-fixed.controls])
+    
+    if(is.matrix(newdata[[1]])==FALSE){
+      newdata=lapply(newdata,function(x)matrix(x,nrow=1))
+    }
+    
+    for(i in 1:N){
+      aux=Reduce("cbind",lapply(newdata,function(x)x[,i]))
+      pred[,i]=(cbind(1,fixed,aux)%*%coef[i,])*w[i]
+    }
+  }
+  final.prediction=rowSums(pred)
+  
+  return(final.prediction)
+}
+
   return(final.prediction)
 }
