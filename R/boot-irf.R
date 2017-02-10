@@ -1,7 +1,7 @@
 
 boot.irf=function (model, ident, h, M, unity.shock = TRUE, m.type = "ols") 
 {
-  Y = model$Y
+  Y = as.matrix(model$Y)
   N = model$N
   p = model$p
   nvar = ncol(model$residuals)
