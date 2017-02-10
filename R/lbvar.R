@@ -54,6 +54,6 @@ lbvar=function (Y, p = 1, delta = 0, lambda = 0.05, xreg = NULL)
   residuals=tail(Y,nrow(fitted))-fitted
   
   return(list(coef.by.equation = t(betas), coef.by.block = coef.by.block, 
-              fitted = fitted,residuals=residuals, Y = Y, p = p, covmat = sigmae, type = "var", 
+              fitted = fitted,residuals=residuals, Y = Y, p = p, N=N, covmat = sigmae, type = "var", 
               xreg = xreg, Ts = c(T = nrow(Xreg), Td = nrow(Xd), Tstar = nrow(Xstar))))
 }
