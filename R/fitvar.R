@@ -9,7 +9,7 @@ fitvar=function(Y,p,m.type="ols",penalty.factor=matrix(1,ncol(Y),ncol(Y)*p+ max(
   }
   Y1=embed(as.matrix(Y),p+1)
   colnames(Y1)=rep(colnames(Y),p+1)
-  if(length(xreg!=0)){
+  if(length(xreg)!=0){
     xreg=tail(xreg,nrow(Y1))
   }
   save.coef=matrix(NA,ncol(Y),ncol(Y)*p+1+max(ncol(xreg),0))
