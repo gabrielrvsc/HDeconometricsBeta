@@ -17,7 +17,7 @@ fitvar=function(Y,p,m.type="ols",penalty.factor=matrix(1,ncol(Y),ncol(Y)*p+ max(
   if(m.type=="ols"){
     for(i in 1:ncol(Y)){
       
-      ols=lm(Y1[,i]~Y1[,-c(1:ncol(Y))]+xreg)
+      ols=lm(Y1[,i]~cbind(Y1[,-c(1:ncol(Y))],xreg))
       save.coef[i,]=coef(ols)
       
     }
