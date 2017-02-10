@@ -45,6 +45,9 @@ boot.irf=function (model, ident, h, M, unity.shock = TRUE, m.type = "ols")
     if (m.type == "ols") {
       modelboot = fitvar(Yboot, p, m.type = "ols")
     }
+    if(type=="lbvar"){
+      modelboot = lbvar(Y,p)
+    }
     identboot = identification(modelboot)
     irfboot = irf(modelboot, identboot, h = h, unity.shock = unity.shock)
     for (i in 1:nvar) {
