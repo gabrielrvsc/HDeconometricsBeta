@@ -1,7 +1,7 @@
 #require(glmnet)
 
 biclasso=function (x, y, alpha = 1, display = FALSE, penalty.factor = rep(1, 
-                                                                 ncol(x))) 
+                                                                 ncol(x)),...) 
 {
   if (is.matrix(x) == FALSE) {
     x = as.matrix(x)
@@ -11,7 +11,7 @@ biclasso=function (x, y, alpha = 1, display = FALSE, penalty.factor = rep(1,
   }
   
   inf.lasso = glmnet(x = x, y = y, family = "gaussian", alpha = alpha, 
-                     penalty.factor = penalty.factor)
+                     penalty.factor = penalty.factor,...)
   coef = as.matrix(coef(inf.lasso))
   lambda = inf.lasso$lambda
   ncoef = inf.lasso$df
