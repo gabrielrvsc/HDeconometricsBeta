@@ -89,7 +89,8 @@ predict.HDeconometrics=function (model, newdata=NULL, h=1)
   }else{
 
     fixed=Reduce("cbind",lapply(newdata,function(x)x[,fixed.controls]))
-    fixed=as.matrix(fixed)
+     fixed=as.vector(t(fixed))
+  fixed = t(as.matrix(fixed))
     newdata=lapply(newdata,function(x)x[,-fixed.controls])
     
     if(is.matrix(newdata[[1]])==FALSE){
