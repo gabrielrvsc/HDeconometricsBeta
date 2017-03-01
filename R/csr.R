@@ -1,4 +1,3 @@
-
 csr=function (y, X, K = 20, k = 4, fixed.controls = NULL) 
 {
   if (length(fixed.controls) > 0) {
@@ -31,9 +30,9 @@ csr=function (y, X, K = 20, k = 4, fixed.controls = NULL)
     for (i in 1:m) {
       model = coef(lm(y ~ w + X[, aux[, i]]))
       final.const[i] = model[1]
-      model=model[-1]
+      model = model[-1]
       final.coef[i, fixed.controls] = model[1:length(fixed.controls)]
-      final.coef[i, aux[, i]] = model[-c(1:length(fixed.controls ))]
+      final.coef[i, aux[, i]] = model[-c(1:length(fixed.controls))]
     }
   }
   else {
@@ -44,6 +43,7 @@ csr=function (y, X, K = 20, k = 4, fixed.controls = NULL)
     }
   }
   colnames(final.coef) = colnames(X)
+  final.coef[is.na(final.coef)]=0
   final.coef = cbind(intersect = final.const, final.coef)
   return(list(coefficients = final.coef, type = "csr"))
 }
